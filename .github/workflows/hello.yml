@@ -1,0 +1,22 @@
+name: Hello #ワークフロー名
+on:
+  push: #イベント (プッシュされたときに起動の意味)
+    # branches:
+    #   - main #mainブランチにプッシュされたとき
+jobs:   # ジョブの定義(配列)
+  hello:  # ジョブ名
+    runs-on: ubuntu-latest # ジョブの実行環境
+    steps: # ステップの定義(配列)
+      - name: Hello world # 最初のステップ名
+        run: echo "Hello world!" # コマンド(echoコマンドを実行する)
+      - uses: actions/checkout@v4 # 2番目のステップ (リポジトリのコードをチェックアウトするアクション)
+
+
+# つまりこのワークフローは
+
+# リポジトリにpushが発生したときに
+# ubuntu-latest環境で
+# helloというジョブだけを実行する、ということである
+# そのhelloジョブは2つのステップで構成され、
+# 1つ目のステップは"Hello world!"と出力する
+# 2つ目のステップはリポジトリのコードをチェックアウトするアクションを実行する
