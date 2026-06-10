@@ -1,6 +1,6 @@
 name: Hello #ワークフロー名
 on:
-  push: #イベント (プッシュされたときに起動の意味)
+  [push,workflow_dispatch] #イベント (プッシュされたときと、手動実行時に起動の意味)
     # branches:
     #   - main #mainブランチにプッシュされたとき
 jobs:   # ジョブの定義(配列)
