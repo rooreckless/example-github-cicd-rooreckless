@@ -1,6 +1,14 @@
 name: Hello #ワークフロー名
 on:
-  [push,workflow_dispatch] #イベント (プッシュされたときと、手動実行時に起動の意味)
+  push: #イベント (起動方法1 プッシュされたときに起動の意味)
+  workflow_dispatch: #イベント (起動方法2 手動実行時に起動の意味)
+    inputs: #手動実行のときの入力値(配列)の定義
+      name: #入力値の名前
+        type: string #入力値の型
+        default: YourName
+        required: true #入力値が必須であることを示す
+        description: 'Your name(Required True)' #入力値の説明
+        
     # branches:
     #   - main #mainブランチにプッシュされたとき
 jobs:   # ジョブの定義(配列)
@@ -8,15 +16,5 @@ jobs:   # ジョブの定義(配列)
     runs-on: ubuntu-latest # ジョブの実行環境
     steps: # ステップの定義(配列)
       - name: Hello world # 最初のステップ名
-        run: echo "Hello world!" # コマンド(echoコマンドを実行する)
+        run: echo "Hello ${{ github.event.inputs.name }}" # コマンド(echoコマンドを実行する時に引数を表示する。${{ github.event.inputs.name }}は手動実行のときの入力値を参照する)
       - uses: actions/checkout@v4 # 2番目のステップ (リポジトリのコードをチェックアウトするアクション)
-
-
-# つまりこのワークフローは
-
-# リポジトリにpushが発生したときに
-# ubuntu-latest環境で
-# helloというジョブだけを実行する、ということである
-# そのhelloジョブは2つのステップで構成され、
-# 1つ目のステップは"Hello world!"と出力する
-# 2つ目のステップはリポジトリのコードをチェックアウトするアクションを実行する
