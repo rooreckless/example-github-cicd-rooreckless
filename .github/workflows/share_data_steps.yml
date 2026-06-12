@@ -1,0 +1,24 @@
+name: Share Data Steps
+on: 
+  push:
+  workflow_dispatch:
+    inputs:
+      first_step_value:
+        type: string
+        required: true
+        description: '文字列(Required)'
+env:
+  WORKFLOW_LV_ENV: "WORKFLOW_LV_ENV_Value"
+jobs:
+  sharing_data_jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow Level Env Check
+        run: echo "Workflow level env value is $WORKFLOW_LV_ENV"
+      - name: First Step Value Check
+        run: echo "First step value is ${{ inputs.first_step_value }}"
+      - name: First Step Value to Github_Output
+        id: first_step_value_to_github_output
+        run: echo "step_value=${{ inputs.first_step_value }}" >> $GITHUB_OUTPUT
+      - name: Second Step
+        run: echo "First step value from second step is ${{ steps.first_step_value_to_github_output.outputs.step_value }}"
