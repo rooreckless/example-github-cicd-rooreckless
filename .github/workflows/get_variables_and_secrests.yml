@@ -1,0 +1,46 @@
+name: Variables and Secrets CheckWorkflow
+on:
+  push:
+jobs:
+  check_variables_and_secrets:
+    runs-on: ubuntu-latest
+    env:
+      MY_VARS: ${{vars.USERNAME}} # 変数の参照
+      MY_SECRET: ${{ secrets.PASSWORD }} # シークレットの参照
+    steps:
+      - name: 1st Check Other Envs
+        run: |
+          echo "Checking environment variables..."
+          echo "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
+          echo "GITHUB_RUN_ID: $GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER: $GITHUB_RUN_NUMBER"
+          echo "GITHUB_ACTION: $GITHUB_ACTION"
+          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+      - name: 2nd Check Vars
+        run: |
+          echo "Checking variables..."
+          if [ -z "$MY_VARS" ]; then
+            echo "MY_VARS is not set."
+          else
+            echo "MY_VARS is ${MY_VARS}"
+          fi
+      - name: 3rd Check Secrets
+        # シークレットはセキュリティ上の理由から、値を直接表示することは推奨されないが、ここでは確認のために表示している。
+        run: |
+          echo "Checking secrets..."
+          if [ -z "$MY_SECRET" ]; then
+            echo "MY_SECRET is not set."
+          else
+            echo "MY_SECRET is ${MY_SECRET}"
+          fi
+      - name: 4th【NotRecommended】Check Secrets without masking
+        # シークレットの値をマスクせずに表示するためには、echoコマンドの前に「::add-mask::」を使用して、シークレットの値をマスクする必要がある。
+        run: |
+          echo "Checking secrets without masking..."
+          if [ -z "$MY_SECRET" ]; then
+            echo "MY_SECRET is not set."
+          else
+            echo "MY_SECRET is ${MY_SECRET:0:1} ${MY_SECRET#?}"
+          fi
