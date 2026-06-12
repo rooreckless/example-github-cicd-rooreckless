@@ -2,23 +2,36 @@ name: Share Data Steps
 on: 
   push:
   workflow_dispatch:
+    # 手動実行のときの入力値の定義
     inputs:
-      first_step_value:
+      # 1つめの引数(ワークフローを手動実行時にのみ入力できる値)
+      dispatch_input_value:
         type: string
         required: true
         description: '文字列(Required)'
+      # 2つめの引数(手動実行時でも使わないが、複数の引数を取れることを確認するため)
+      dummy_input:
+        type: string
+        required: false
+        description: 'ダミー入力(Required False)'
+# ワークフロー全体での環境変数の定義
 env:
   WORKFLOW_LV_ENV: "WORKFLOW_LV_ENV_Value"
 jobs:
   sharing_data_jobs:
     runs-on: ubuntu-latest
     steps:
-      - name: Workflow Level Env Check
+      # ステップ1: ワークフロー全体の環境変数の確認だけ(使わない)
+      - name: 1st step Checking Workflow Level Env 
         run: echo "Workflow level env value is $WORKFLOW_LV_ENV"
-      - name: First Step Value Check
-        run: echo "First step value is ${{ inputs.first_step_value }}"
-      - name: First Step Value to Github_Output
-        id: first_step_value_to_github_output
-        run: echo "step_value=${{ inputs.first_step_value }}" >> $GITHUB_OUTPUT
-      - name: Second Step
-        run: echo "First step value from second step is ${{ steps.first_step_value_to_github_output.outputs.step_value }}"
+      # ステップ2: 手動実行のときの入力値の確認(もちろんpushの時は入力値はないので空になる)
+      - name: 2nd step Checking dispatch_input_value
+        run: echo "dispatch_input_value is ${{ inputs.dispatch_input_value }}"
+      # ステップ3: ステップ2の値をステップ4に渡す
+      - name: 3rd step dispatch_input_value to Github_Output
+        id: dispatch_input_value_to_github_output
+        # ステップ2の値をGithub Actionsの出力値(Github Output)にセットする。Github Outputにセットすることで、同じジョブ内の他のステップから参照できるようになる。
+        run: echo "step_value=${{ inputs.dispatch_input_value }}" >> $GITHUB_OUTPUT
+      # ステップ4: ステップ3の値を使用(確認だけ)する
+      - name: 4th step Checking dispatch_input_value from second step
+        run: echo "dispatch_input_value from second step is ${{ steps.dispatch_input_value_to_github_output.outputs.step_value }}"
