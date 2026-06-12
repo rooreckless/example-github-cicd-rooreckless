@@ -1,6 +1,7 @@
 name: Hello #ワークフロー名
 on:
-  push: #イベント (起動方法1 プッシュされたときに起動の意味)
+  push: #イベント (起動方法1 プッシュされたときに起動の意味)pushだと、任意の引数は取れない
+
   workflow_dispatch: #イベント (起動方法2 手動実行時に起動の意味)
     inputs: #手動実行のときの入力値(配列)の定義
       name: #入力値の名前
@@ -8,9 +9,6 @@ on:
         default: YourName
         required: true #入力値が必須であることを示す
         description: 'Your name(Required True)' #入力値の説明
-        
-    # branches:
-    #   - main #mainブランチにプッシュされたとき
 jobs:   # ジョブの定義(配列)
   hello:  # ジョブ名
     runs-on: ubuntu-latest # ジョブの実行環境
