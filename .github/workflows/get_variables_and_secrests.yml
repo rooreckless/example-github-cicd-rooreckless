@@ -5,8 +5,8 @@ jobs:
   check_variables_and_secrets:
     runs-on: ubuntu-latest
     env:
-      MY_VARS: ${{vars.USERNAME}} # 変数の参照
-      MY_SECRET: ${{ secrets.PASSWORD }} # シークレットの参照
+      MY_VARS: ${{vars.USERNAME}} # 変数の参照 GithubリポジトリのVariablesの内容を取ってきている。
+      MY_SECRET: ${{ secrets.PASSWORD }} # シークレットの参照 GithubリポジトリのSecretsの内容を取ってきている。
     steps:
       - name: 1st Check Other Envs
         run: |
@@ -19,6 +19,7 @@ jobs:
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
       - name: 2nd Check Vars
+        # GithubリポジトリのVariablesの内容を表示させることができる。シークレットと違って、変数はセキュリティ上の理由から値を表示しても問題ない。
         run: |
           echo "Checking variables..."
           if [ -z "$MY_VARS" ]; then
@@ -36,7 +37,7 @@ jobs:
             echo "MY_SECRET is ${MY_SECRET}"
           fi
       - name: 4th【NotRecommended】Check Secrets without masking
-        # シークレットの値をマスクせずに表示するためには、echoコマンドの前に「::add-mask::」を使用して、シークレットの値をマスクする必要がある。
+        # このやり方は非推奨ですが、GithubリポジトリのSecretsの内容を表示させることができる。
         run: |
           echo "Checking secrets without masking..."
           if [ -z "$MY_SECRET" ]; then
