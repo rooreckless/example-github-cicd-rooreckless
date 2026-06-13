@@ -1,0 +1,24 @@
+name: TestGoWorkflow
+on:
+  pull_request:      # プルリクエストが作成されたときにワークフローがトリガーされるようにする。
+    paths:           # 【フィルタリング】ただし、プルリクエストの変更内容にpathsのファイルが含まれている場合にのみ、実行するようにする。
+      - 'go/**/*.go' # 対象はgoディレクトリ以下のgoファイルに変更があったときにワークフローがトリガーされるようにする。
+jobs:
+  test_go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        # 以下のusesで、リポジトリからコードをチェックアウトするためのアクションを使う。
+        # これで、ワークフロー内でリポジトリのコードを操作できるようになる。
+        uses: actions/checkout@v6
+      - name: Set up Go
+        # ワークフロー実行環境でgoが使えるようにするためのアクションを使う。これもGithub公式提供のもの。
+        # withで、使用するGoのバージョンを指定することができる。
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.4' # Goのバージョンを指定
+      - name: Run Go tests
+        # goディレクトリ以下の全てのgoファイルのテストを実行する。-vオプションはテストの詳細な出力を表示するためのもの。
+        run: |
+          go test ./go/... -v
+          
