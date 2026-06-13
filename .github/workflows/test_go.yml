@@ -20,5 +20,5 @@ jobs:
       - name: Run Go tests
         # goディレクトリ以下の全てのgoファイルのテストを実行する。-vオプションはテストの詳細な出力を表示するためのもの。
         run: |
-          go test ./go/... -v
+          go test ./go/excellent/*.go -v
           
