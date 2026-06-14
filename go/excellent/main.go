@@ -8,6 +8,7 @@ func EvenOrOdd(number int) string {
 	}
 }
 
+// メイン関数
 func main() {
 	// 例: 4は偶数、5は奇数
 	println(EvenOrOdd(4)) // 出力: Even
