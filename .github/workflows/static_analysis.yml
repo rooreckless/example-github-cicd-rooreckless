@@ -1,0 +1,28 @@
+name: Static analysis
+on: 
+  push:
+    paths:
+      - '.github/workflows/*.yml' # workflowsディレクトリ直下のワークフローファイルの変更をトリガーにする
+      - '.github/workflows/*.yaml'
+defaults: # デフォルトシェルの設定 = bashを選択
+  run:
+    shell: bash
+concurrency: # ワークフローの同時実行の制御 = 同じグループのワークフローがすでに実行中の場合、現在のワークフローをキャンセルする
+  group: ${{ github.workflow }}-${{ github.ref }} # 同時実行を制御するグループ名
+  cancel-in-progress: true # 同じグループのワークフローがすでに実行中の場合、現在のワークフローをキャンセルする
+jobs:
+  lint:
+    name: Static Analysis - Actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+      - name: Run actionlint with Docker
+        run: |
+          echo 'Checking out repository...'
+          echo 'Analyzing workflow files in .github/workflows/ directory with Docker'
+          docker run --rm -v "${PWD}:${PWD}" -w "${PWD}" rhysd/actionlint:latest .github/workflows/*.yml
+          
+      # - name: Run actionlint
+      #   uses: rhysd/actionlint@v1.6.10 # actionlintを実行するアクション
