@@ -23,3 +23,7 @@ jobs:
           echo 'Checking out repository...'
           echo 'Analyzing workflow files in .github/workflows/ directory with Docker'
           docker run --rm -v "${PWD}:${PWD}" -w "${PWD}" rhysd/actionlint:latest .github/workflows/*.yml
+
+# このワークフローはinvalid.ymlに対し、actionlintを使って静的解析を行うものです。
+# invalid.ymlはわざと、jobsもstepsも定義しない、無効なワークフローにしています。
+# 静的解析ワークフローでエラーがでることを確認するためです。
