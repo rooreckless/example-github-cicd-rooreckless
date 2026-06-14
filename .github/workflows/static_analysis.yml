@@ -23,6 +23,3 @@ jobs:
           echo 'Checking out repository...'
           echo 'Analyzing workflow files in .github/workflows/ directory with Docker'
           docker run --rm -v "${PWD}:${PWD}" -w "${PWD}" rhysd/actionlint:latest .github/workflows/*.yml
-          
-      # - name: Run actionlint
-      #   uses: rhysd/actionlint@v1.6.10 # actionlintを実行するアクション
