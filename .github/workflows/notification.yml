@@ -55,11 +55,11 @@ jobs:
           payload: |
             {
               "text": "GitHub Actionsの結果: ${{ job.status }}\n
-              "ワークフロー": ${{ github.workflow }}\n
-              "リポジトリ": ${{ github.repository }}\n" +
-              "ブランチ: ${{ github.ref_name }}\n" +
-              "コミット: ${{ github.sha }}\n" +
-              "詳細: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              ワークフロー: ${{ github.workflow }}\n
+              リポジトリ: ${{ github.repository }}\n
+              ブランチ: ${{ github.ref_name }}\n
+              コミット: ${{ github.sha }}\n
+              詳細: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
       # #--------------------------------------------------
 
