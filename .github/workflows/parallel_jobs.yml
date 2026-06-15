@@ -1,0 +1,24 @@
+name: Parallel Jobs
+on: push
+jobs: # jobsに複数のジョブを定義すると、それらは並列に実行される。
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: J1 - S1
+        run: sleep 10 && echo "This is J1, S1"
+      - name: J1 - S2
+        run: sleep 10 && echo "This is J1, S2"
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: J2 - S1
+        run: sleep 10 && echo "This is J2, S1"
+      - name: J2 - S2
+        run: sleep 10 && echo "This is J2, S2"
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: J3 - S1
+        run: sleep 10 && echo "This is J3, S1"
+      - name: J3 - S2
+        run: sleep 10 && echo "This is J3, S2"
