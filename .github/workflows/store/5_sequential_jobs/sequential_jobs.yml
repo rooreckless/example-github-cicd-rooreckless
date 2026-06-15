@@ -1,0 +1,76 @@
+name: Sequential Jobs
+on: push
+jobs: # jobsの複数のジョブを1->2->3の順に実行されるようにする。
+  job1:
+    # job1はneedsがないので、最初に実行される
+    runs-on: ubuntu-latest
+    steps:
+      - name: J1 - S1
+        run: |
+          echo "This is J1-S1"
+          echo "$(date)"
+          sleep 10
+          echo "END J1-S1"
+          echo "$(date)"
+      - name: J1 - S2
+        run: |
+          echo "This is J1-S2"
+          echo "$(date)"
+          sleep 10
+          echo "END J1-S2"
+          echo "$(date)"
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1       # needsを使って、job1が成功した後に、このjob2が実行されるようにする。
+    steps:
+      - name: J2 - S1
+        run: |
+          echo "This is J2-S1"
+          echo "$(date)"
+          sleep 10
+          echo "END J2-S1"
+          echo "$(date)"
+      - name: J2 - S2
+        run: |
+          echo "This is J2-S2"
+          echo "$(date)"
+          sleep 10
+          echo "END J2-S2"
+          echo "$(date)"
+  job3:
+    runs-on: ubuntu-latest
+    needs: [job2]       # needsを使って、job2が成功した後に、このjob3が実行されるようにする。
+                        # 配列で複数のジョブをneedsに指定することもできる
+    steps:
+      - name: J3 - S1
+        run: |
+          echo "This is J3-S1"
+          echo "$(date)"
+          sleep 10
+          echo "END J3-S1"
+          echo "$(date)"
+      - name: J3 - S2
+        run: |
+          echo "This is J3-S2"
+          echo "$(date)"
+          sleep 10
+          echo "END J3-S2"
+          echo "$(date)"
+  job4:
+    # job4はneedsがないので、job1と同じタイミングで最初に並列実行される
+    runs-on: ubuntu-latest
+    steps:
+      - name: J4 - S1
+        run: |
+          echo "This is J4-S1"
+          echo "$(date)"
+          sleep 10
+          echo "END J4-S1"
+          echo "$(date)"
+      - name: J4 - S2
+        run: |
+          echo "This is J4-S2"
+          echo "$(date)"
+          sleep 10
+          echo "END J4-S2"
+          echo "$(date)"
