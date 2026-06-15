@@ -1,0 +1,27 @@
+name: Debug log
+on: push
+jobs:
+  debug_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug log
+        run: |
+          echo "--ただのecho --"
+          echo "Current date and time: $(date)"
+          echo "Environment variables:"
+          echo "----------------------------------"
+          echo "--ワークフローコマンド--"
+          echo "::debug::This is a debug log. (デバッグログ有効化時にのみ出力される)"
+          echo "::warning::This is a warning log. (常に出力されるが、警告として表示される)"
+          echo "::error::This is an error log. (常に出力されるが、エラーとして表示される)"
+          echo "::debug::Current date and time: $(date) (デバッグログ有効化時にのみ出力される)"
+          echo "----------------------------------"
+          echo "--トレーシングオプション(set -xが必要です)--"
+          set -x
+          date
+          hostname
+          echo "----------------------------------"
+          echo "--ログのグループ化--"
+          echo "::group::Grouped logs (グループ化されたログ)"
+          printenv
+          echo "::endgroup::End of grouped logs (グループ化されたログの終了)"
