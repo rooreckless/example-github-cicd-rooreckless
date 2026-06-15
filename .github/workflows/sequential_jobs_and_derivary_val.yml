@@ -26,7 +26,7 @@ jobs:
       - name: J1 - S2 Receive value from previous step
         run: |
           echo "J1-S2: 前のstepから受け取った値"
-          # ステップ間の値の受け取りは、${{ steps.<渡し元のstep_id>.outputs.<output_name> }} で行う
+          # ステップ間の値の受け取りは、steps.<渡し元のstep_id>.outputs.<output_name> で行う
           echo "message = ${{ steps.create_message.outputs.message }}"
 
       - name: J1 - S3 Create number
@@ -38,7 +38,7 @@ jobs:
 
       - name: J1 - S4 Use multiple step outputs
         run: |
-          # ステップ間の値の受け取りは、${{ steps.<渡し元のstep_id>.outputs.<output_name> }} で行う
+          # ステップ間の値の受け取りは、steps.<渡し元のstep_id>.outputs.<output_name> で行う
           echo "message = ${{ steps.create_message.outputs.message }}"
           echo "number  = ${{ steps.create_number.outputs.number }}"
           # このステップでは単に値を表示しているだけ。次のjob2への値渡しは、job1.outputsのところ。
@@ -61,7 +61,7 @@ jobs:
       - name: J2 - S1 Receive job1 outputs
         run: |
           echo "job1から受け取った値"
-          # ジョブ間の値の受け取りは、${{ needs.<渡し元のjob_id>.outputs.<output_name> }} で行う
+          # ジョブ間の値の受け取りは、needs.<渡し元のjob_id>.outputs.<output_name> で行う
           echo "message = ${{ needs.job1.outputs.job1_message }}"
           echo "number  = ${{ needs.job1.outputs.job1_number }}"
 
@@ -89,7 +89,7 @@ jobs:
       - name: J2 - S4 Check outputs in same job
         run: |
           echo "同じjob内の前のstepから受け取った値"
-          # ステップ間の値の受け取りは、${{ steps.<渡し元のstep_id>.outputs.<output_name> }} で行う
+          # ステップ間の値の受け取りは、steps.<渡し元のstep_id>.outputs.<output_name> で行う
           echo "message = ${{ steps.convert_message.outputs.converted_message }}"
           echo "number  = ${{ steps.calculate_number.outputs.calculated_number }}"
           # このステップでは単に値を表示しているだけ。次のjob3への値渡しは、job2.outputsのところ。
@@ -103,7 +103,7 @@ jobs:
       - name: J3 - S1 Receive job2 outputs
         run: |
           echo "job2から受け取った値"
-          # ジョブ間の値の受け取りは、${{ needs.<渡し元のjob_id>.outputs.<output_name> }} で行う
+          # ジョブ間の値の受け取りは、needs.<渡し元のjob_id>.outputs.<output_name> で行う
           echo "message = ${{ needs.job2.outputs.job2_message }}"
           echo "number  = ${{ needs.job2.outputs.job2_number }}"
 
@@ -130,6 +130,6 @@ jobs:
       - name: J4 - S2 Receive value from previous step
         run: |
           echo "job4内のstep間で受け取った値"
-          # ステップ間の値の受け取りは、${{ steps.<渡し元のstep_id>.outputs.<output_name> }} で行う
+          # ステップ間の値の受け取りは、steps.<渡し元のstep_id>.outputs.<output_name> で行う
           echo "${{ steps.create_job4_value.outputs.job4_value }}"
       # ただし、job4の値はjob1/job2/job3からは参照していないです。
