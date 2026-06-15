@@ -8,8 +8,8 @@ defaults: # デフォルトシェルの設定 = bashを選択
   run:
     shell: bash
 concurrency: # ワークフローの同時実行の制御 = 同じグループのワークフローがすでに実行中の場合、現在のワークフローをキャンセルする
-  group: ${{ github.workflow }}-${{ github.ref }} # 同時実行を制御するグループ名
-  cancel-in-progress: true # 同じグループのワークフローがすでに実行中の場合、現在のワークフローをキャンセルする
+  group: ${{ github.workflow }}-${{ github.ref }} # 同じワークフローかつ同じブランチの実行を同じグループにする
+  cancel-in-progress: true # 新しくこのワークフローの実行が開始されたら、同じグループで実行中の古いワークフローをキャンセルする
 jobs:
   lint:
     name: Static Analysis - Actionlint
