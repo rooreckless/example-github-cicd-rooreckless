@@ -1,0 +1,66 @@
+name: Notification to Slack workflow
+on: pull_request
+jobs:
+  notify_slack:
+    runs-on: ubuntu-latest
+    steps:
+      # #-- curlコマンドを使ってSlackのIncoming Webhookに通知する場合--
+      # - name: Notify Slack using curl
+      #   # if: failure() # ジョブが失敗したときにのみ通知する
+      #   if: always() # ジョブの成功・失敗に関わらず常に通知する。現在は検証用のため。
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     JOB_STATUS: ${{ job.status }}
+      #     WORKFLOW_NAME: ${{ github.workflow }}
+      #     REPOSITORY: ${{ github.repository }}
+      #     BRANCH: ${{ github.ref_name }}
+      #     COMMIT_SHA: ${{ github.sha }}
+      #     RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      #   run: |
+      #     payload=$(
+      #       jq -n \
+      #         --arg status "$JOB_STATUS" \
+      #         --arg workflow "$WORKFLOW_NAME" \
+      #         --arg repository "$REPOSITORY" \
+      #         --arg branch "$BRANCH" \
+      #         --arg sha "$COMMIT_SHA" \
+      #         --arg url "$RUN_URL" \
+      #         --arg text "GitHub Actionsの実行結果: ${{job.status}}" \
+      #         '{
+      #           text: (
+      #             "GitHub Actions通知\n" +
+      #             "ワークフロー: " + $workflow + "\n" +
+      #             "リポジトリ: " + $repository + "\n" +
+      #             "ブランチ: " + $branch + "\n" +
+      #             "コミット: " + $sha + "\n" +
+      #             "結果: " + $status + "\n" +
+      #             "詳細: " + $url + "\n" +
+      #             "メッセージ: " + $text
+      #           )
+      #         }'
+      #     )
+      #     curl --fail-with-body \
+      #       -X POST \
+      #       -H 'Content-Type: application/json' \
+      #       --data "$payload" \
+      #       "$SLACK_WEBHOOK_URL"
+      # #--------------------------------------------------
+      # #-- マーケットプレイスのSlackアクションを使う場合--
+      - name: Notify Slack by Slack Action
+        if: always()
+        uses: slackapi/slack-github-action@v3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "GitHub Actionsの結果: ${{ job.status }}\n
+              ワークフロー: ${{ github.workflow }}\n
+              リポジトリ: ${{ github.repository }}\n
+              ブランチ: ${{ github.ref_name }}\n
+              コミット: ${{ github.sha }}\n
+              詳細: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+      # #--------------------------------------------------
+
+
