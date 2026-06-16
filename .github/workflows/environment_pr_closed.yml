@@ -1,0 +1,52 @@
+name: Environments Check with PR MERGED (Branch;test/stg)
+on:
+  pull_request:
+    branches:
+      - 'stg' # stgブランチに対するPRがマージされたときにトリガーされる
+      - 'test' # testブランチに対するPRがマージされたときにトリガーされる
+    types:
+      # PRがマージされたときにトリガーされるように指定
+      - closed
+jobs:
+  print_secrets_variables:
+    runs-on: ubuntu-latest
+    environment: ${{ github.head_ref }} # PRのブランチ名を環境として指定(stgやtestが入る)
+    env:
+      ENVIRONMENT_NAME: ${{ github.head_ref }} # ジョブLvの環境変数として利用
+      COMMON_SECRETS: ${{ secrets.COMMON_SECRETS }} # 環境変数によらないシークレットを利用
+      COMMON_VARIABLES: ${{ vars.COMMON_VARIABLES }} # 環境変数によらないvariablesを利用
+      ENVIRONMENT_SECRETS: ${{ secrets.ENVIRONMENT_SECRETS }} # 環境変数によるシークレットを利用
+      ENVIRONMENT_VARIABLES: ${{ vars.ENVIRONMENT_VARIABLES }}
+      EVENT_TYPE: ${{ github.event.action }} # PRがclosedされたときのイベントの種類を環境変数として利用
+    steps:
+      - name: Print selected environment (選択された環境を表示)
+        run : |
+          echo "Selected environment= $ENVIRONMENT_NAME"
+          echo "COMMON_SECRETS= $COMMON_SECRETS"
+          echo "COMMON_SECRETS is ${COMMON_SECRETS:0:1} ${COMMON_SECRETS#?}"
+          echo "COMMON_VARIABLES= $COMMON_VARIABLES"
+          echo "ENVIRONMENT_SECRETS= $ENVIRONMENT_SECRETS"
+          echo "ENVIRONMENT_SECRETS is ${ENVIRONMENT_SECRETS:0:1} ${ENVIRONMENT_SECRETS#?}"
+          echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
+          echo "-- イベントの種類 (event name): $GITHUB_EVENT_NAME"
+          echo "-- イベントのアクション (event action): $EVENT_TYPE"
+      - name: Check environment-specific processing (環境ごとの処理を確認)
+        run : |
+          echo " --- 環境ごとの処理を確認 + runの中でif文を使ってみる ---"
+          if [ "$ENVIRONMENT_NAME" == 'stg' ]; then
+            echo "This is the stg environment (stg環境です)"
+            echo "---stg環境用の処理をここに記述します。---"
+          elif [ "$ENVIRONMENT_NAME" == 'test' ]; then
+            echo "This is the test environment (test環境です)"
+            echo "---test環境用の処理をここに記述します。---"
+          else
+            echo "Unknown environment (不明な環境です)"
+          fi
+
+          if [ "$GITHUB_EVENT_NAME" == 'pull_request' ]; then
+            echo "This workflow was triggered by a pull request event (このワークフローはプルリクエストイベントによってトリガーされました)"
+          elif [ "$GITHUB_EVENT_NAME" == 'push' ]; then
+            echo "This workflow was triggered by a push event (このワークフローはプッシュイベントによってトリガーされました)"
+          else
+            echo "This workflow was not triggered by a pull request or push event (このワークフローはプルリクエストイベントやプッシュイベントによってトリガーされたわけではありません)"
+          fi
