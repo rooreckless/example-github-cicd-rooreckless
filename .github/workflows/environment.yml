@@ -20,10 +20,6 @@ jobs:
       COMMON_VARIABLES: ${{ vars.COMMON_VARIABLES }} # 環境変数によらないvariablesを利用
       ENVIRONMENT_SECRETS: ${{ secrets.ENVIRONMENT_SECRETS }} # 環境変数によるシークレットを利用
       ENVIRONMENT_VARIABLES: ${{ vars.ENVIRONMENT_VARIABLES }}
-      STG_ENV_ONLY_SECRETS: ${{ secrets.STG_ENV_ONLY_SECRETS }} # stg環境のシークレットを利用
-      STG_ENV_ONLY_VARIABLES: ${{ vars.STG_ENV_ONLY_VARIABLES }} # stg環境のvariablesを利用
-      TEST_ENV_ONLY_SECRETS: ${{ secrets.TEST_ENV_ONLY_SECRETS }} # test環境のシークレットを利用
-      TEST_ENV_ONLY_VARIABLES: ${{ vars.TEST_ENV_ONLY_VARIABLES }} # test環境のvariablesを利用
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
@@ -36,12 +32,18 @@ jobs:
           echo "ENVIRONMENT_VARIABLES= ${{ ENVIRONMENT_VARIABLES }}"
       - name: Print stg environment secrets and variables (stg環境のシークレットと変数を表示)
         if: ${{ inputs.environment-name }} == 'stg' # 環境がstgの場合のみ実行
+        env:
+          STG_ENV_ONLY_SECRETS: ${{ secrets.STG_ENV_ONLY_SECRETS }} # stg環境のシークレットを利用
+          STG_ENV_ONLY_VARIABLES: ${{ vars.STG_ENV_ONLY_VARIABLES }} # stg環境のvariablesを利用
         run : |
           echo "STG_ENV_ONLY_SECRETS= ${{ STG_ENV_ONLY_SECRETS }}"
           echo "STG_ENV_ONLY_SECRETS is ${STG_ENV_ONLY_SECRETS:0:1} ${STG_ENV_ONLY_SECRETS#?}"
           echo "STG_ENV_ONLY_VARIABLES= ${{ STG_ENV_ONLY_VARIABLES }}"
       - name: Print test environment secrets and variables (test環境のシークレットと変数を表示)
         if: ${{ inputs.environment-name }} == 'test' # 環境がtestの場合のみ実行
+        env:
+          TEST_ENV_ONLY_SECRETS: ${{ secrets.TEST_ENV_ONLY_SECRETS }} # test環境のシークレットを利用
+          TEST_ENV_ONLY_VARIABLES: ${{ vars.TEST_ENV_ONLY_VARIABLES }} # test環境のvariablesを利用
         run : |
           echo "TEST_ENV_ONLY_SECRETS= ${{ TEST_ENV_ONLY_SECRETS }}"
           echo "TEST_ENV_ONLY_SECRETS is ${TEST_ENV_ONLY_SECRETS:0:1} ${TEST_ENV_ONLY_SECRETS#?}"
