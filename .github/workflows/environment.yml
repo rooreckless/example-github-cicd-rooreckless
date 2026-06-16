@@ -30,29 +30,14 @@ jobs:
           echo "ENVIRONMENT_SECRETS= ${{ secrets.ENVIRONMENT_SECRETS }}"
           echo "ENVIRONMENT_SECRETS is ${ENVIRONMENT_SECRETS:0:1} ${ENVIRONMENT_SECRETS#?}"
           echo "ENVIRONMENT_VARIABLES= ${{ vars.ENVIRONMENT_VARIABLES }}"
-      
-  print_stg_secrets_variables:
-    if: ${{ inputs.environment-name }} == 'stg' # 環境がstgの場合のみ実行
-    runs-on: ubuntu-latest
-    environment: stg # stg環境を指定
-    env:
-      STG_ENV_ONLY_SECRETS: ${{ secrets.STG_ENV_ONLY_SECRETS }} # stg環境でのみ利用するシークレットを利用
-      STG_ENV_ONLY_VARIABLES: ${{ vars.STG_ENV_ONLY_VARIABLES }} # stg環境でのみ利用するvariablesを利用
-    steps:
       - name: Print stg environment secrets and variables (stg環境のシークレットと変数を表示)
+        if: ${{ inputs.environment-name }} == 'stg' # 環境がstgの場合のみ実行
         run : |
           echo "STG_ENV_ONLY_SECRETS= ${{ secrets.STG_ENV_ONLY_SECRETS }}"
           echo "STG_ENV_ONLY_SECRETS is ${STG_ENV_ONLY_SECRETS:0:1} ${STG_ENV_ONLY_SECRETS#?}"
           echo "STG_ENV_ONLY_VARIABLES= ${{ vars.STG_ENV_ONLY_VARIABLES }}"
-  print_test_secrets_variables:
-    if: ${{ inputs.environment-name }} == 'test' # 環境がtestの場合のみ実行
-    runs-on: ubuntu-latest
-    environment: test # test環境を指定
-    env:
-      TEST_ENV_ONLY_SECRETS: ${{ secrets.TEST_ENV_ONLY_SECRETS }} # test環境でのみ利用するシークレットを利用
-      TEST_ENV_ONLY_VARIABLES: ${{ vars.TEST_ENV_ONLY_VARIABLES }} # test環境でのみ利用するvariablesを利用
-    steps:
       - name: Print test environment secrets and variables (test環境のシークレットと変数を表示)
+        if: ${{ inputs.environment-name }} == 'test' # 環境がtestの場合のみ実行
         run : |
           echo "TEST_ENV_ONLY_SECRETS= ${{ secrets.TEST_ENV_ONLY_SECRETS }}"
           echo "TEST_ENV_ONLY_SECRETS is ${TEST_ENV_ONLY_SECRETS:0:1} ${TEST_ENV_ONLY_SECRETS#?}"
