@@ -23,28 +23,28 @@ jobs:
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
-          echo "Selected environment= ${{ ENVIRONMENT_NAME }}"
-          echo "COMMON_SECRETS= ${{ COMMON_SECRETS }}"
+          echo "Selected environment= $ENVIRONMENT_NAME"
+          echo "COMMON_SECRETS= $COMMON_SECRETS"
           echo "COMMON_SECRETS is ${COMMON_SECRETS:0:1} ${COMMON_SECRETS#?}"
-          echo "COMMON_VARIABLES= ${{ COMMON_VARIABLES }}"
-          echo "ENVIRONMENT_SECRETS= ${{ ENVIRONMENT_SECRETS }}"
+          echo "COMMON_VARIABLES= $COMMON_VARIABLES"
+          echo "ENVIRONMENT_SECRETS= $ENVIRONMENT_SECRETS"
           echo "ENVIRONMENT_SECRETS is ${ENVIRONMENT_SECRETS:0:1} ${ENVIRONMENT_SECRETS#?}"
-          echo "ENVIRONMENT_VARIABLES= ${{ ENVIRONMENT_VARIABLES }}"
+          echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
       - name: Print stg environment secrets and variables (stg環境のシークレットと変数を表示)
         if: ${{ inputs.environment-name }} == 'stg' # 環境がstgの場合のみ実行
         env:
           STG_ENV_ONLY_SECRETS: ${{ secrets.STG_ENV_ONLY_SECRETS }} # stg環境のシークレットを利用
           STG_ENV_ONLY_VARIABLES: ${{ vars.STG_ENV_ONLY_VARIABLES }} # stg環境のvariablesを利用
         run : |
-          echo "STG_ENV_ONLY_SECRETS= ${{ STG_ENV_ONLY_SECRETS }}"
+          echo "STG_ENV_ONLY_SECRETS= $STG_ENV_ONLY_SECRETS"
           echo "STG_ENV_ONLY_SECRETS is ${STG_ENV_ONLY_SECRETS:0:1} ${STG_ENV_ONLY_SECRETS#?}"
-          echo "STG_ENV_ONLY_VARIABLES= ${{ STG_ENV_ONLY_VARIABLES }}"
+          echo "STG_ENV_ONLY_VARIABLES= $STG_ENV_ONLY_VARIABLES"
       - name: Print test environment secrets and variables (test環境のシークレットと変数を表示)
         if: ${{ inputs.environment-name }} == 'test' # 環境がtestの場合のみ実行
         env:
           TEST_ENV_ONLY_SECRETS: ${{ secrets.TEST_ENV_ONLY_SECRETS }} # test環境のシークレットを利用
           TEST_ENV_ONLY_VARIABLES: ${{ vars.TEST_ENV_ONLY_VARIABLES }} # test環境のvariablesを利用
         run : |
-          echo "TEST_ENV_ONLY_SECRETS= ${{ TEST_ENV_ONLY_SECRETS }}"
+          echo "TEST_ENV_ONLY_SECRETS= $TEST_ENV_ONLY_SECRETS"
           echo "TEST_ENV_ONLY_SECRETS is ${TEST_ENV_ONLY_SECRETS:0:1} ${TEST_ENV_ONLY_SECRETS#?}"
-          echo "TEST_ENV_ONLY_VARIABLES= ${{ TEST_ENV_ONLY_VARIABLES }}"
+          echo "TEST_ENV_ONLY_VARIABLES= $TEST_ENV_ONLY_VARIABLES"
