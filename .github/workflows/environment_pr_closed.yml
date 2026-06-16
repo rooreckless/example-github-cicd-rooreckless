@@ -19,6 +19,7 @@ jobs:
       ENVIRONMENT_SECRETS: ${{ secrets.ENVIRONMENT_SECRETS }} # 環境変数によるシークレットを利用
       ENVIRONMENT_VARIABLES: ${{ vars.ENVIRONMENT_VARIABLES }}
       EVENT_TYPE: ${{ github.event.action }} # PRがclosedされたときのイベントの種類を環境変数として利用
+      BASE_BRANCH: ${{ github.event.pull_request.base.ref }} # PRのマージ先ブランチを環境変数として利用
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
@@ -31,6 +32,7 @@ jobs:
           echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
           echo "-- イベントの種類 (event name): $GITHUB_EVENT_NAME"
           echo "-- イベントのアクション (event action): $EVENT_TYPE"
+          echo "-- PRのマージ先ブランチ: $BASE_BRANCH"
       - name: Check environment-specific processing (環境ごとの処理を確認)
         run : |
           echo " --- 環境ごとの処理を確認 + runの中でif文を使ってみる ---"
