@@ -1,14 +1,15 @@
-name: Environments Check with PR MERGED (Branch;test/stg)
+name: Environments Check with PR MERGED (Branch test/stg to main)
 on:
   pull_request:
     branches:
-      - 'stg' # stgブランチに対するPRがマージされたときにトリガーされる
-      - 'test' # testブランチに対するPRがマージされたときにトリガーされる
+      - 'main' # mainブランチに対するPRがマージされたときにトリガーされる
     types:
       # PRがマージされたときにトリガーされるように指定
       - closed
 jobs:
   print_secrets_variables:
+    # mainブランチに対するPRのブランチ名がtestかstgの場合のみ実行するようにif文を記述
+    if: github.event.pull_request.head.ref == 'test' || github.event.pull_request.head.ref == 'stg'
     runs-on: ubuntu-latest
     environment: ${{ github.head_ref }} # PRのブランチ名を環境として指定(stgやtestが入る)
     env:
@@ -18,10 +19,11 @@ jobs:
       ENVIRONMENT_SECRETS: ${{ secrets.ENVIRONMENT_SECRETS }} # 環境変数によるシークレットを利用
       ENVIRONMENT_VARIABLES: ${{ vars.ENVIRONMENT_VARIABLES }}
       EVENT_TYPE: ${{ github.event.action }} # PRがclosedされたときのイベントの種類を環境変数として利用
+      BASE_BRANCH: ${{ github.event.pull_request.base.ref }} # PRのマージ先ブランチを環境変数として利用
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
-          echo "Selected environment= $ENVIRONMENT_NAME"
+          echo "Selected environment = PRのマージ元ブランチ = $ENVIRONMENT_NAME"
           echo "COMMON_SECRETS= $COMMON_SECRETS"
           echo "COMMON_SECRETS is ${COMMON_SECRETS:0:1} ${COMMON_SECRETS#?}"
           echo "COMMON_VARIABLES= $COMMON_VARIABLES"
@@ -30,6 +32,7 @@ jobs:
           echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
           echo "-- イベントの種類 (event name): $GITHUB_EVENT_NAME"
           echo "-- イベントのアクション (event action): $EVENT_TYPE"
+          echo "-- PRのマージ先ブランチ: $BASE_BRANCH"
       - name: Check environment-specific processing (環境ごとの処理を確認)
         run : |
           echo " --- 環境ごとの処理を確認 + runの中でif文を使ってみる ---"

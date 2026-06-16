@@ -1,9 +1,8 @@
-name: Environments Check with PR Opened (Branch;test/stg)
+name: Environments Check with PR Opened (Branch test/stg to main)
 on:
   pull_request:
     branches:
-      - 'stg' # stgブランチに対するPRが作成されたときにトリガーされる
-      - 'test' # testブランチに対するPRが作成されたときにトリガーされる
+      - 'main' # mainブランチに対するPRが作成されたときにトリガーされる
     types:
       # PRが作成されたとき、更新されたとき、再オープンされたときにトリガーされるように指定
       - opened
@@ -12,6 +11,8 @@ on:
 jobs:
   print_secrets_variables:
     runs-on: ubuntu-latest
+    # mainブランチに対するPRのブランチ名がtestかstgの場合のみ実行するようにif文を記述
+    if: github.event.pull_request.head.ref == 'test' || github.event.pull_request.head.ref == 'stg'
     environment: ${{ github.head_ref }} # PRのブランチ名を環境として指定(stgやtestが入る)
     env:
       ENVIRONMENT_NAME: ${{ github.head_ref }} # ジョブLvの環境変数として利用
@@ -20,10 +21,11 @@ jobs:
       ENVIRONMENT_SECRETS: ${{ secrets.ENVIRONMENT_SECRETS }} # 環境変数によるシークレットを利用
       ENVIRONMENT_VARIABLES: ${{ vars.ENVIRONMENT_VARIABLES }}
       EVENT_TYPE: ${{ github.event.action }} # PRがopenedされたときのイベントの種類を環境変数として利用
+      BASE_BRANCH: ${{ github.event.pull_request.base.ref }} # PRのマージ先ブランチを環境変数として利用
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
-          echo "Selected environment= $ENVIRONMENT_NAME"
+          echo "Selected environment = PRのマージ元ブランチ = $ENVIRONMENT_NAME"
           echo "COMMON_SECRETS= $COMMON_SECRETS"
           echo "COMMON_SECRETS is ${COMMON_SECRETS:0:1} ${COMMON_SECRETS#?}"
           echo "COMMON_VARIABLES= $COMMON_VARIABLES"
@@ -32,6 +34,7 @@ jobs:
           echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
           echo "-- イベントの種類 (event name): $GITHUB_EVENT_NAME"
           echo "-- イベントのアクション (event action): $EVENT_TYPE"
+          echo "-- PRのマージ先ブランチ: $BASE_BRANCH"
       - name: Check environment-specific processing (環境ごとの処理を確認)
         run : |
           echo " --- 環境ごとの処理を確認 + runの中でif文を使ってみる ---"
