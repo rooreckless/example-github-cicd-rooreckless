@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Print selected environment (選択された環境を表示)
         run : |
-          echo "Selected environment= $ENVIRONMENT_NAME"
+          echo "Selected environment = PRのマージ元ブランチ = $ENVIRONMENT_NAME"
           echo "COMMON_SECRETS= $COMMON_SECRETS"
           echo "COMMON_SECRETS is ${COMMON_SECRETS:0:1} ${COMMON_SECRETS#?}"
           echo "COMMON_VARIABLES= $COMMON_VARIABLES"
