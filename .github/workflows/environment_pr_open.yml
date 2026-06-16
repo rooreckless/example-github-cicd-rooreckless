@@ -1,9 +1,8 @@
 name: Environments Check with PR Opened (Branch test/stg to main)
 on:
   pull_request:
-    # branches:
-    #   - 'stg' # stgブランチ、mainブランチに対するPRが作成されたときにトリガーされる
-    #   - 'test' # testブランチ、mainブランチに対するPRが作成されたときにトリガーされる
+    branches:
+      - 'main' # mainブランチに対するPRが作成されたときにトリガーされる
     types:
       # PRが作成されたとき、更新されたとき、再オープンされたときにトリガーされるように指定
       - opened
@@ -12,6 +11,8 @@ on:
 jobs:
   print_secrets_variables:
     runs-on: ubuntu-latest
+    # mainブランチに対するPRのブランチ名がtestかstgの場合のみ実行するようにif文を記述
+    if: github.event.pull_request.head.ref == 'test' || github.event.pull_request.head.ref == 'stg'
     environment: ${{ github.head_ref }} # PRのブランチ名を環境として指定(stgやtestが入る)
     env:
       ENVIRONMENT_NAME: ${{ github.head_ref }} # ジョブLvの環境変数として利用

@@ -2,13 +2,14 @@ name: Environments Check with PR MERGED (Branch test/stg to main)
 on:
   pull_request:
     branches:
-      - 'stg' # stgブランチから、mainブランチに対するPRがマージされたときにトリガーされる
-      - 'test' # testブランチから、mainブランチに対するPRがマージされたときにトリガーされる
+      - 'main' # mainブランチに対するPRがマージされたときにトリガーされる
     types:
       # PRがマージされたときにトリガーされるように指定
       - closed
 jobs:
   print_secrets_variables:
+    # mainブランチに対するPRのブランチ名がtestかstgの場合のみ実行するようにif文を記述
+    if: github.event.pull_request.head.ref == 'test' || github.event.pull_request.head.ref == 'stg'
     runs-on: ubuntu-latest
     environment: ${{ github.head_ref }} # PRのブランチ名を環境として指定(stgやtestが入る)
     env:
