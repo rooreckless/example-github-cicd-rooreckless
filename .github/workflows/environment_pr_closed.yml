@@ -1,9 +1,9 @@
-name: Environments Check with PR MERGED (Branch;test/stg)
+name: Environments Check with PR MERGED (Branch test/stg to main)
 on:
   pull_request:
     branches:
-      - 'stg' # stgブランチに対するPRがマージされたときにトリガーされる
-      - 'test' # testブランチに対するPRがマージされたときにトリガーされる
+      - 'stg' # stgブランチから、mainブランチに対するPRがマージされたときにトリガーされる
+      - 'test' # testブランチから、mainブランチに対するPRがマージされたときにトリガーされる
     types:
       # PRがマージされたときにトリガーされるように指定
       - closed
