@@ -31,7 +31,7 @@ jobs:
           echo "ENVIRONMENT_SECRETS is ${ENVIRONMENT_SECRETS:0:1} ${ENVIRONMENT_SECRETS#?}"
           echo "ENVIRONMENT_VARIABLES= $ENVIRONMENT_VARIABLES"
       - name: Print stg environment secrets and variables (stg環境のシークレットと変数を表示)
-        if: $ENVIRONMENT_NAME == 'stg' # 環境がstgの場合のみ実行
+        if: ${{ ENVIRONMENT_NAME }} == 'stg' # 環境がstgの場合のみ実行
         env:
           STG_ENV_ONLY_SECRETS: ${{ secrets.STG_ENV_ONLY_SECRETS }} # stg環境のシークレットを利用
           STG_ENV_ONLY_VARIABLES: ${{ vars.STG_ENV_ONLY_VARIABLES }} # stg環境のvariablesを利用
