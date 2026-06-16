@@ -34,11 +34,11 @@ jobs:
         if: ${{ inputs.environment-name }} == 'stg' # 環境がstgの場合のみ実行
         run : |
           echo "STG_ENV_ONLY_SECRETS= ${{ secrets.STG_ENV_ONLY_SECRETS }}"
-          echo "STG_ENV_ONLY_SECRETS is ${secrets.STG_ENV_ONLY_SECRETS:0:1} ${secrets.STG_ENV_ONLY_SECRETS#?}"
+          echo "STG_ENV_ONLY_SECRETS is ${{secrets.STG_ENV_ONLY_SECRETS:0:1}} ${{secrets.STG_ENV_ONLY_SECRETS#?}}"
           echo "STG_ENV_ONLY_VARIABLES= ${{ vars.STG_ENV_ONLY_VARIABLES }}"
       - name: Print test environment secrets and variables (test環境のシークレットと変数を表示)
         if: ${{ inputs.environment-name }} == 'test' # 環境がtestの場合のみ実行
         run : |
           echo "TEST_ENV_ONLY_SECRETS= ${{ secrets.TEST_ENV_ONLY_SECRETS }}"
-          echo "TEST_ENV_ONLY_SECRETS is ${secrets.TEST_ENV_ONLY_SECRETS:0:1} ${secrets.TEST_ENV_ONLY_SECRETS#?}"
+          echo "TEST_ENV_ONLY_SECRETS is ${{secrets.TEST_ENV_ONLY_SECRETS:0:1}} ${{secrets.TEST_ENV_ONLY_SECRETS#?}}"
           echo "TEST_ENV_ONLY_VARIABLES= ${{ vars.TEST_ENV_ONLY_VARIABLES }}"
