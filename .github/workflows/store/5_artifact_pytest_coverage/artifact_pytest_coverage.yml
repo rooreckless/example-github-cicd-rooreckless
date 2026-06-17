@@ -1,0 +1,46 @@
+name: Python Test & Coverage Report To Artifact
+on:
+  pull_request:
+    branches:
+      - 'test' # testブランチに対するPRが作成されたときにトリガーされる
+    types:
+      # PRが作成されたとき、更新されたとき、再オープンされたときにトリガーされるように指定
+      - opened
+      - synchronize
+      - reopened
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        # リポジトリをチェックアウト
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        # Pythonのバージョンを指定してセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.6"
+
+      - name: Install dependencies
+        # パッケージをインストール
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r python_requirements.txt
+
+      - name: Run tests with coverage
+        # テスト実施、カバレッジレポートを作成
+        run: |
+          python3 -m pytest \
+            --cov=python.modules \
+            --cov-report=term-missing \
+            --cov-report=html
+      
+      - name: Upload coverage report
+        # カバレッジレポートをアーティファクトとしてアップロードするステップ
+        # アップロード用アクションを使う
+        uses: actions/upload-artifact@v4
+        # アップロードするアーティファクトの名前とパスを指定
+        with:
+          name: coverage-report
+          path: htmlcov/
